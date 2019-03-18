@@ -16,3 +16,10 @@ code {
 p {
   cursor: pointer;
 }
+
+.before {
+  font-size: 2em;
+}
+.after {
+  font-size: 4em;
+}

@@ -3,7 +3,6 @@ import logo from './logo.svg';
 import './App.css';
 
 
-
 function List(props) {
   return (
     <ul className="list-group p-3">
@@ -14,7 +13,12 @@ function List(props) {
               <li 
                 key={item.key} 
                 className="text-dark col-12">
-                <p>{item.text}</p>
+                <p 
+                  onClick={() => props.done(item.key)}
+                  style={{ textDecoration: item.style }}
+                >
+                  {item.text}
+                </p>
                 <button
                   className="btn btn-danger float-right m-2" 
                   onClick={() => props.delete(item.key)}>
@@ -43,14 +47,16 @@ class App extends Component {
     this.addTask = this.addTask.bind(this);
     this.deleteTask = this.deleteTask.bind(this);
     this.editTask = this.editTask.bind(this);
+    this.doneTask = this.doneTask.bind(this);
   }
 
   addTask(event, key) {
-
     if (this._inputElement.value !== '') {
       var newItem = {
         text: this._inputElement.value,
-        key: Date.now()
+        key: Date.now(),
+        done: false,
+        style: "1em"
       };
       this.setState(oldStates => ({
         tasks: oldStates.tasks.concat(newItem)
@@ -58,19 +64,7 @@ class App extends Component {
       this._inputElement.value = "";
     }
     event.preventDefault();
-    
-    // else {
-    //   if(this._inputElement.value !== '') {
-    //     var filteredTasks = this.state.tasks.filter(item => item.key === key);
-    //     var newItem = {
-    //       text: this._inputElement,
-    //       key: key
-    //     };
-    //     this.setState(oldStates => ({
-    //       task: 
-    //     }))
-    //   }
-    // }
+
   }
   
   deleteTask(key) {
@@ -82,14 +76,27 @@ class App extends Component {
 
   editTask(key) {
     var filteredTask = this.state.tasks.filter(item => item.key === key)
-    console.log(filteredTask);
     this._inputElement.value = filteredTask[0].text;
     this.deleteTask(key);
   }
 
+  doneTask(key) {
+    var filteredTask = this.state.tasks.filter(item => item.key === key);
+    
+    filteredTask[0].done = !filteredTask[0].done;
+
+    if(filteredTask[0].done) {
+      filteredTask[0].style = "line-through"; 
+    }
+    if(!filteredTask[0].done) {
+      filteredTask[0].style = "initial"; 
+    }
+
+    this.setState({ tasks: this.state.tasks})
+  }
  
   render() {
-    console.log(this.state.tasks);
+    console.log(this.state.tasks);  
     return (
       <div className="App">
         <header className="App-header">
@@ -120,6 +127,7 @@ class App extends Component {
           task={this.state.tasks} 
           delete={this.deleteTask} 
           edit={this.editTask}
+          done={this.doneTask}
         />
       </div>
     );

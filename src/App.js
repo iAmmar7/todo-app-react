@@ -13,16 +13,16 @@ function List(props) {
               <li 
                 key={item.key} 
                 className="text-dark col-12"
-          >
+               >
                 {item.text}
                   <button
                     className="btn btn-danger float-right m-2" 
-             >
+                    onClick={() => props.delete(item.key)}>
                     Delete
                   </button>
                   <button
                     className="btn btn-danger float-right m-2" 
-          >
+                    >
                     Edit
                   </button>
               </li>
@@ -42,6 +42,7 @@ class App extends Component {
       tasks: []
     };
     this.addTask = this.addTask.bind(this);
+    this.deleteTask = this.deleteTask.bind(this);
 
   }
 
@@ -59,6 +60,13 @@ class App extends Component {
       }
       event.preventDefault();
     }
+  }
+  
+  deleteTask(key) {
+    var filteredTasks = this.state.tasks.filter(item => item.key !== key)
+    this.setState({
+      tasks: filteredTasks
+    });
   }
  
   render() {
@@ -91,6 +99,7 @@ class App extends Component {
         </form>
         <List
           task={this.state.tasks} 
+          delete={this.deleteTask} 
         />
       </div>
     );

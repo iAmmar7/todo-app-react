@@ -13,10 +13,6 @@ code {
     monospace;
 }
 
-li {
-  display: flex;
-  align-items: center;
-}
-button {
-  float: right;
+input {
+  outline: none;
 }

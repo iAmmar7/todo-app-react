@@ -3,6 +3,7 @@ import logo from './logo.svg';
 import './App.css';
 
 
+
 function List(props) {
   return (
     <ul className="list-group p-3">
@@ -12,19 +13,18 @@ function List(props) {
             <div className="row li">
               <li 
                 key={item.key} 
-                className="text-dark col-12"
-               >
-                {item.text}
-                  <button
-                    className="btn btn-danger float-right m-2" 
-                    onClick={() => props.delete(item.key)}>
-                    Delete
-                  </button>
-                  <button
-                    className="btn btn-danger float-right m-2" 
-                    >
-                    Edit
-                  </button>
+                className="text-dark col-12">
+                <p>{item.text}</p>
+                <button
+                  className="btn btn-danger float-right m-2" 
+                  onClick={() => props.delete(item.key)}>
+                  Delete
+                </button>
+                <button
+                  className="btn btn-danger float-right m-2" 
+                  onClick={() => props.edit(item.key)}>
+                  Edit
+                </button>
               </li>
             </div>
           </div>
@@ -38,28 +38,39 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      edit: false,
       tasks: []
     };
     this.addTask = this.addTask.bind(this);
     this.deleteTask = this.deleteTask.bind(this);
-
+    this.editTask = this.editTask.bind(this);
   }
 
   addTask(event, key) {
-    if(this.state.edit === false) {
-      if (this._inputElement.value !== '') {
-        var newItem = {
-          text: this._inputElement.value,
-          key: Date.now()
-        };
-        this.setState(oldStates => ({
-          tasks: oldStates.tasks.concat(newItem)
-        }));
-        this._inputElement.value = "";
-      }
-      event.preventDefault();
+
+    if (this._inputElement.value !== '') {
+      var newItem = {
+        text: this._inputElement.value,
+        key: Date.now()
+      };
+      this.setState(oldStates => ({
+        tasks: oldStates.tasks.concat(newItem)
+      }));
+      this._inputElement.value = "";
     }
+    event.preventDefault();
+    
+    // else {
+    //   if(this._inputElement.value !== '') {
+    //     var filteredTasks = this.state.tasks.filter(item => item.key === key);
+    //     var newItem = {
+    //       text: this._inputElement,
+    //       key: key
+    //     };
+    //     this.setState(oldStates => ({
+    //       task: 
+    //     }))
+    //   }
+    // }
   }
   
   deleteTask(key) {
@@ -68,6 +79,14 @@ class App extends Component {
       tasks: filteredTasks
     });
   }
+
+  editTask(key) {
+    var filteredTask = this.state.tasks.filter(item => item.key === key)
+    console.log(filteredTask);
+    this._inputElement.value = filteredTask[0].text;
+    this.deleteTask(key);
+  }
+
  
   render() {
     console.log(this.state.tasks);
@@ -100,6 +119,7 @@ class App extends Component {
         <List
           task={this.state.tasks} 
           delete={this.deleteTask} 
+          edit={this.editTask}
         />
       </div>
     );

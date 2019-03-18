@@ -13,6 +13,6 @@ code {
     monospace;
 }
 
-input {
-  outline: none;
+p {
+  cursor: pointer;
 }
